@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class SkillCircle 
 {
-    private bool isBase, isContactWithBase, isActive;
-    private float cost;
+    private bool isBase, isActive;
+    private int cost;
     private string description;
     private int id;
 
     public bool IsBase { get { return isBase; } }
     public bool IsActive { get { return isActive; } }
-    public bool IsContactWithBase { get { return isContactWithBase; } }
-    public float Cost { get { return cost; } }
+    public int Cost { get { return cost; } }
     public int Id { get { return id; } }
 
-    public SkillCircle(int id, string description, float cost)
+    public SkillCircle(int id, string description, int cost)
     {
         if(id == 0)
         {
@@ -41,22 +40,10 @@ public class SkillCircle
     public void ActivateSkill()
     {
         isActive = true;
-        isContactWithBase = true;
     }
 
     public void DeactivateSkill()
     {
         isActive = false;
-        isContactWithBase = false;
-    }
-
-    public void CanBeActivated()
-    {
-        isContactWithBase = true;
-    }
-
-    public void CanNotBeActivated()
-    {
-        isContactWithBase = false;
     }
 }

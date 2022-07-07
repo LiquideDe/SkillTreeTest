@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,11 @@ public class CircleShower : MonoBehaviour
     List<RectTransform> connections = new List<RectTransform>();
     [SerializeField] private RectTransform circleTransform;
     [SerializeField] private Transform circlesContainer, connectionsContainer;
+    [SerializeField] private GameObject buttonActivate, buttonDeactivate;
+    public event EventHandler Clicked;
+    public event EventHandler ClickedActivate;
+    public event EventHandler ClickedDeactivate;
+    public event EventHandler ClickedReset;
 
     public void CreateCircle(int id, float x, float y, string description)
     {
@@ -34,7 +40,7 @@ public class CircleShower : MonoBehaviour
 
     private void DrawConnection(Vector2 firstPoint, Vector2 secondPoint)
     {
-        GameObject gameObject = new GameObject("dotConnection", typeof(Image));
+        GameObject gameObject = new GameObject("skillConnection", typeof(Image));
         gameObject.transform.SetParent(connectionsContainer, false);
         gameObject.GetComponent<Image>().color = new Color(0, .7f, 1, .5f);
         RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
@@ -48,5 +54,53 @@ public class CircleShower : MonoBehaviour
         Vector3 rot = Quaternion.LookRotation(secondPoint - firstPoint).eulerAngles;
         rectTransform.localEulerAngles = new Vector3(0, 0, rot.x);
         connections.Add(rectTransform);
+    }
+
+    public void ClickOnCircle(int id)
+    {
+        Clicked(id, EventArgs.Empty);
+    }
+
+    public void ClickActivateButton()
+    {
+        ClickedActivate(0, EventArgs.Empty);
+    }
+
+    public void ClickDeactivateButton()
+    {
+        ClickedDeactivate(1, EventArgs.Empty);
+    }
+
+    public void ClickReset()
+    {
+        ClickedReset(2, EventArgs.Empty);
+    }
+
+    public void ShowButtonActivate()
+    {
+        buttonActivate.SetActive(true);
+        buttonDeactivate.SetActive(false);
+    } 
+
+    public void ShowButtonDeactivate()
+    {
+        buttonActivate.SetActive(false);
+        buttonDeactivate.SetActive(true);
+    }
+
+    public void ShowNoButton()
+    {
+        buttonActivate.SetActive(false);
+        buttonDeactivate.SetActive(false);
+    }
+
+    public void ActivateSkill(int id)
+    {
+        circles[id].GetComponent<VisualSkillCircle>().Activate();
+    }
+
+    public void DeactivateSkill(int id)
+    {
+        circles[id].GetComponent<VisualSkillCircle>().DeActivate();
     }
 }

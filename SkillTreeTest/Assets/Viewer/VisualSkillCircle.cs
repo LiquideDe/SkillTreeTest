@@ -10,11 +10,12 @@ public class VisualSkillCircle : MonoBehaviour, IPointerDownHandler
     private int id;
     [SerializeField] private GameObject backgroundActive, backgroundDeactive;
     [SerializeField] private Text textDescription, textId;
-    public event EventHandler Clicked;
+    [SerializeField] private CircleShower shower;
+    
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Clicked(id, EventArgs.Empty);
+        shower.ClickOnCircle(id);
     }
 
     public void Activate()
