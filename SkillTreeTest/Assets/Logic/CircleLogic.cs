@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class CircleLogic 
@@ -8,9 +9,9 @@ public class CircleLogic
 
     private List<SkillCircle> skillCircles = new List<SkillCircle>();
 
-    private int skillPoints = 2;
+    private int skillPoints;
 
-    public int SkillPoints { get { return skillPoints; } }
+    public event EventHandler SkillPointsChanged;
 
     public void CreateSkillCircle(int id, string description, int cost)
     {
@@ -31,25 +32,6 @@ public class CircleLogic
         return CheckForActiveNextCircle(skillCircles[id]);
     }
 
-    /*
-    public void CheckAllCircles()
-    {
-        bool answ;
-        for (int i = 1; i < skillCircles.Count; i++)
-        {
-            answ = CheckCircleForPossibleConnect(skillCircles[i]);
-
-            if(!answ && !skillCircles[i].IsActive && skillCircles[i].IsContactWithBase)
-            {
-                skillCircles[i].CanNotBeActivated();
-            }
-            else if (answ)
-            {
-                skillCircles[i].CanBeActivated();
-            }
-        }
-    }
-    */
     private bool CheckCircleForPossibleConnect(SkillCircle circle)
     {
         bool answ = false;
@@ -67,6 +49,7 @@ public class CircleLogic
                 }
             }
         }
+        
         return answ;
     }
 
@@ -78,9 +61,51 @@ public class CircleLogic
             if (skillCircles[connections[i][0]] == circle)
             {
                 if (skillCircles[connections[i][1]].IsActive)
-                {
-                    return true;
+                {                    
+                    if(HowMuchActiveRoute(skillCircles[connections[i][1]]) == 1)
+                    {
+                        return true;                        
+                    }
+                    else
+                    {
+                        return !CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], circle);
+                    }
                 }
+            }
+        }
+        return answ;
+    }
+
+    private int HowMuchActiveRoute(SkillCircle circle)
+    {
+        int amount = 0;
+        for (int i = 0; i < connections.Count; i++)
+        {
+            if (skillCircles[connections[i][0]] == circle && skillCircles[connections[i][1]].IsActive)
+            {
+                amount++; 
+            }
+            else if(skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]].IsActive)
+            {
+                amount++;
+            }
+        }
+
+        return amount;
+    }
+
+    private bool CheckForActivePreviousCircleWithRestriction(SkillCircle circle, SkillCircle restriction)
+    {
+        bool answ = false;
+        for (int i = connections.Count - 1; i >= 0; i--)
+        {
+            if(skillCircles[connections[i][0]] == skillCircles[0])
+            {
+                answ = true;
+            }
+            else if (skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]] != restriction)
+            {
+                answ = CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][0]], restriction);
             }
         }
         return answ;
@@ -96,6 +121,7 @@ public class CircleLogic
         if (skillPoints >= skillCircles[id].Cost)
         {
             skillPoints -= skillCircles[id].Cost;
+            SkillPointsChanged(skillPoints, EventArgs.Empty);
             skillCircles[id].ActivateSkill();
             return true;
         }
@@ -107,6 +133,25 @@ public class CircleLogic
 
     public void DeactivateSkill(int id)
     {
-        skillPoints += skillCircles[id].Cost;
+        if(skillCircles[id].IsActive)
+        {
+            skillPoints += skillCircles[id].Cost;
+            SkillPointsChanged(skillPoints, EventArgs.Empty);
+            skillCircles[id].DeactivateSkill();
+        }        
+    }
+
+    public void EarnPoints(int amount)
+    {
+        skillPoints += amount;
+        SkillPointsChanged(skillPoints, EventArgs.Empty);
+    }
+
+    public void ResetSkills()
+    {
+        for(int i = 1; i < skillCircles.Count; i++)
+        {
+            DeactivateSkill(i);
+        }
     }
 }

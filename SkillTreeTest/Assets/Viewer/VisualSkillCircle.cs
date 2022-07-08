@@ -8,14 +8,19 @@ using UnityEngine.UI;
 public class VisualSkillCircle : MonoBehaviour, IPointerDownHandler
 {
     private int id;
-    [SerializeField] private GameObject backgroundActive, backgroundDeactive;
+    [SerializeField] private GameObject backgroundActive, backgroundDeactive, choiceImg;
     [SerializeField] private Text textDescription, textId;
     [SerializeField] private CircleShower shower;
     
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        shower.ClickOnCircle(id);
+        if(id != 0)
+        {
+            shower.ClickOnCircle(id);
+            textDescription.gameObject.SetActive(true);
+            choiceImg.SetActive(true);
+        }        
     }
 
     public void Activate()
@@ -28,6 +33,7 @@ public class VisualSkillCircle : MonoBehaviour, IPointerDownHandler
     {
         backgroundActive.SetActive(false);
         backgroundDeactive.SetActive(true);
+        choiceImg.SetActive(false);
     }
 
     public void SetId(int id)
@@ -39,5 +45,11 @@ public class VisualSkillCircle : MonoBehaviour, IPointerDownHandler
     public void SetDescription(string text)
     {
         textDescription.text = text;
+    }
+
+    public void HideDescription()
+    {
+        textDescription.gameObject.SetActive(false);
+        choiceImg.SetActive(false);
     }
 }

@@ -11,18 +11,20 @@ public class CircleShower : MonoBehaviour
     [SerializeField] private RectTransform circleTransform;
     [SerializeField] private Transform circlesContainer, connectionsContainer;
     [SerializeField] private GameObject buttonActivate, buttonDeactivate;
+    [SerializeField] private Text textSkillPoints;
     public event EventHandler Clicked;
     public event EventHandler ClickedActivate;
     public event EventHandler ClickedDeactivate;
     public event EventHandler ClickedReset;
+    public event EventHandler ClickedEarnPoints;
 
-    public void CreateCircle(int id, float x, float y, string description)
+    public void CreateCircle(int id, float x, float y, string description, int cost)
     {
         circles.Add(Instantiate(circleTransform));
         int i = circles.Count - 1;
         var circle = circles[i].GetComponent<VisualSkillCircle>();
         circle.SetId(id);
-        circle.SetDescription(description);
+        circle.SetDescription($"{description} - {cost} points");
         circles[i].SetParent(circlesContainer);
         circles[i].anchoredPosition = new Vector2(x, y);
         circles[i].gameObject.SetActive(true);
@@ -52,13 +54,28 @@ public class CircleShower : MonoBehaviour
 
         rectTransform.anchoredPosition = firstPoint + dir * distance * .5f;
         Vector3 rot = Quaternion.LookRotation(secondPoint - firstPoint).eulerAngles;
-        rectTransform.localEulerAngles = new Vector3(0, 0, rot.x);
+        if(secondPoint.x < 0)
+        {
+            rectTransform.localEulerAngles = new Vector3(0, 0, rot.x);
+        }
+        else
+        {
+            rectTransform.localEulerAngles = new Vector3(0, 0, rot.x * -1);
+        }
+        
         connections.Add(rectTransform);
     }
 
     public void ClickOnCircle(int id)
     {
         Clicked(id, EventArgs.Empty);
+        for(int i = 1; i < circles.Count; i++)
+        {
+            if(i != id)
+            {
+                circles[i].GetComponent<VisualSkillCircle>().HideDescription();
+            }
+        }
     }
 
     public void ClickActivateButton()
@@ -74,6 +91,12 @@ public class CircleShower : MonoBehaviour
     public void ClickReset()
     {
         ClickedReset(2, EventArgs.Empty);
+        for(int i = 1; i < circles.Count; i++)
+        {
+            DeactivateSkill(i);
+        }
+        ShowNoButton();
+        ClickOnCircle(0);
     }
 
     public void ShowButtonActivate()
@@ -102,5 +125,15 @@ public class CircleShower : MonoBehaviour
     public void DeactivateSkill(int id)
     {
         circles[id].GetComponent<VisualSkillCircle>().DeActivate();
+    }
+
+    public void SetAmountSkillPoints(int amount)
+    {
+        textSkillPoints.text = $"Количество очков {amount}";
+    }
+
+    public void EarnPoints()
+    {
+        ClickedEarnPoints(3, EventArgs.Empty);
     }
 }

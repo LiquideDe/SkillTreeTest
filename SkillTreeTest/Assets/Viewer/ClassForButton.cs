@@ -12,7 +12,6 @@ public abstract class ClassForButton : MonoBehaviour, IPointerDownHandler, IPoin
     {
         background.SetActive(false);
         backgroundPush.SetActive(true);
-        Debug.Log($"Нажали");
     }
 
     public void OnPointerUp(PointerEventData eventData)
