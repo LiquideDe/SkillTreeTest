@@ -29,11 +29,11 @@ public class CircleWatcher
         CreateConnections(0, 2);
         CreateConnections(2, 4);
         CreateConnections(0, 3);
-        CreateConnections(3, 4);
-        */
+        CreateConnections(3, 4);*/
+
 
         //Пример графа как в задании
-        /*
+        
         CreateCircle(0, 0, 0, "base", 0);
         CreateCircle(1, -64, 79, "Ходьба", 1);
         CreateCircle(2, 58, -87, "Бег", 1);
@@ -57,9 +57,10 @@ public class CircleWatcher
         CreateConnections(5,7);
         CreateConnections(6,7);
         CreateConnections(8,10);
-        CreateConnections(9,10);*/
+        CreateConnections(9,10);
 
-        //Пример графа из конца
+        //Пример кругового графа из конца задания
+        /*
         CreateCircle(0, 308, 0, "base", 0);
         CreateCircle(1, 237, 87, "Ходьба", 1);
         CreateCircle(2, 125, 148, "Бег", 1);
@@ -76,7 +77,7 @@ public class CircleWatcher
         CreateConnections(3, 4);
         CreateConnections(4, 5);
         CreateConnections(5, 6);
-        CreateConnections(6, 7);
+        CreateConnections(6, 7);*/
 
         Initial();
         circleLogic.EarnPoints(4);
