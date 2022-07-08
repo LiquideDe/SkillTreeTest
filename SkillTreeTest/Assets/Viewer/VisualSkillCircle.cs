@@ -39,7 +39,15 @@ public class VisualSkillCircle : MonoBehaviour, IPointerDownHandler
     public void SetId(int id)
     {
         this.id = id;
-        textId.text = $"{id}";
+        if(id == 0)
+        {
+            textId.text = $"База";
+        }
+        else
+        {
+            textId.text = $"{id}";
+        }
+        
     }
 
     public void SetDescription(string text)

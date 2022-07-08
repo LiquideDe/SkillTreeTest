@@ -48,8 +48,33 @@ public class CircleLogic
                     answ = CheckCircleForPossibleConnect(skillCircles[connections[i][0]]);
                 }
             }
+            
+        }
+
+        if (!answ)
+        {
+            answ = CheckCircleForPossibleConnectReverse(circle);
         }
         
+        return answ;
+    }
+
+    private bool CheckCircleForPossibleConnectReverse(SkillCircle circle)
+    {
+        bool answ = false;
+        for (int i = connections.Count - 1; i >= 0; i--)
+        {
+            if(skillCircles[connections[i][0]] == skillCircles[0] && skillCircles[connections[i][1]] == circle)
+            {
+                return true;
+            }
+
+            else if (skillCircles[connections[i][0]] == circle && skillCircles[connections[i][1]].IsActive)
+            {
+                answ = CheckCircleForPossibleConnectReverse(skillCircles[connections[i][1]]);
+            }
+        }
+
         return answ;
     }
 
@@ -66,13 +91,26 @@ public class CircleLogic
                     {
                         return true;                        
                     }
-                    else
+                    else if(CheckForActivePreviousCircleWithRestriction(skillCircles[circle.Id - 1], circle))
                     {
                         return !CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], circle);
                     }
                 }
             }
         }
+
+        if (!answ)
+        {
+            for (int i = connections.Count - 1; i >= 0; i--)
+            {
+                if(skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]].IsActive)
+                {
+                    answ = !CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][0]], circle);
+                    break;
+                }
+            }
+        }
+
         return answ;
     }
 
@@ -98,14 +136,17 @@ public class CircleLogic
     {
         for (int i = connections.Count - 1; i >= 0; i--)
         {
+            if (circle == skillCircles[0])
+            {
+                return true;
+            }
+
             if (skillCircles[connections[i][0]] == circle && skillCircles[connections[i][1]] != restriction && skillCircles[connections[i][1]].IsActive)
             {
-                Debug.Log($"Нашли более низкий круг {skillCircles[connections[i][1]].Id}, идем дальше");
                 return CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], restriction, circle);
             }           
         }
 
-        Debug.Log($"Идем на глубину");
         return CheckActiveCircleFromDownToUp(circle, restriction, previousCircle);
     }
 
@@ -118,7 +159,6 @@ public class CircleLogic
             {
                 if (skillCircles[connections[i][0]] == skillCircles[0])
                 {
-                    Debug.Log($"Мы нашли базу true");
                     return true;
                 }
                 else
@@ -128,7 +168,6 @@ public class CircleLogic
             }
         }
 
-        Debug.Log($"Получили для точки {circle.Id} ответ {answ}");
         return answ;
     }
 
