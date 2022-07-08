@@ -94,20 +94,41 @@ public class CircleLogic
         return amount;
     }
 
-    private bool CheckForActivePreviousCircleWithRestriction(SkillCircle circle, SkillCircle restriction)
+    private bool CheckForActivePreviousCircleWithRestriction(SkillCircle circle, SkillCircle restriction, SkillCircle previousCircle = null )
+    {
+        for (int i = connections.Count - 1; i >= 0; i--)
+        {
+            if (skillCircles[connections[i][0]] == circle && skillCircles[connections[i][1]] != restriction && skillCircles[connections[i][1]].IsActive)
+            {
+                Debug.Log($"Нашли более низкий круг {skillCircles[connections[i][1]].Id}, идем дальше");
+                return CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], restriction, circle);
+            }           
+        }
+
+        Debug.Log($"Идем на глубину");
+        return CheckActiveCircleFromDownToUp(circle, restriction, previousCircle);
+    }
+
+    private bool CheckActiveCircleFromDownToUp(SkillCircle circle, SkillCircle restriction, SkillCircle previousCircle)
     {
         bool answ = false;
         for (int i = connections.Count - 1; i >= 0; i--)
         {
-            if(skillCircles[connections[i][0]] == skillCircles[0])
+            if (skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]] != restriction && skillCircles[connections[i][0]].IsActive && skillCircles[connections[i][0]] != previousCircle)
             {
-                answ = true;
-            }
-            else if (skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]] != restriction)
-            {
-                answ = CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][0]], restriction);
+                if (skillCircles[connections[i][0]] == skillCircles[0])
+                {
+                    Debug.Log($"Мы нашли базу true");
+                    return true;
+                }
+                else
+                {
+                    answ = CheckActiveCircleFromDownToUp(skillCircles[connections[i][0]], restriction, circle);
+                }
             }
         }
+
+        Debug.Log($"Получили для точки {circle.Id} ответ {answ}");
         return answ;
     }
 

@@ -17,6 +17,7 @@ public class CircleWatcher
     
     public void CreateTree()
     {
+        /*
         CreateCircle(0, 0, 0, "base", 0);
         CreateCircle(1, -161, 123, "run", 1);
         CreateCircle(2, 157, 116, "heat", 1);
@@ -28,6 +29,32 @@ public class CircleWatcher
         CreateConnections(2, 4);
         CreateConnections(0, 3);
         CreateConnections(3, 4);
+        */
+
+        CreateCircle(0, 0, 0, "base", 0);
+        CreateCircle(1, -64, 79, "Ходьба", 1);
+        CreateCircle(2, 58, -47, "Бег", 1);
+        CreateCircle(3, 137, -118, "Прыжок", 2);
+        CreateCircle(4, -109, -79, "Удар", 1);
+        CreateCircle(5, -204, -56, "Пинок", 2);
+        CreateCircle(6, -81, -191, "Кивок", 2);
+        CreateCircle(7, -212, -181, "Удар с разворота", 3);
+        CreateCircle(8, 89, 97, "Зрение", 1);
+        CreateCircle(9, 117, 18, "Слух", 1);
+        CreateCircle(10, 198, 104, "Эмоции", 2);
+
+        CreateConnections(0,1);
+        CreateConnections(0,2);
+        CreateConnections(0,4);
+        CreateConnections(0,8);
+        CreateConnections(0,9);
+        CreateConnections(2,3);
+        CreateConnections(4,5);
+        CreateConnections(4,6);
+        CreateConnections(5,7);
+        CreateConnections(6,7);
+        CreateConnections(8,10);
+        CreateConnections(9,10);
 
         Initial();
         circleLogic.EarnPoints(4);
