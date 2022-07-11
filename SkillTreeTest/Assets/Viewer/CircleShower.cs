@@ -53,6 +53,7 @@ public class CircleShower : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(distance, 3f);
 
         rectTransform.anchoredPosition = firstPoint + dir * distance * .5f;
+        
         Vector3 rot = Quaternion.LookRotation(secondPoint - firstPoint).normalized.eulerAngles;
 
         
@@ -64,6 +65,7 @@ public class CircleShower : MonoBehaviour
         {
             rectTransform.localEulerAngles = new Vector3(0, 0, rot.x * -1);
         }
+
         connections.Add(rectTransform);
     }
 

@@ -37,6 +37,7 @@ public class CircleLogic
         bool answ = false;
         for (int i = 0; i < connections.Count; i++)
         {
+            //Ищем ребра в которых участвует наша вершина, если в этом ребре есть база или любая активна вершина, значит нашу вершину тоже можно Изучить.
             if (skillCircles[connections[i][1]] == circle)
             {
                 if (skillCircles[connections[i][0]] == skillCircles[0])
@@ -54,6 +55,7 @@ public class CircleLogic
 
         if (!answ)
         {
+            //Если ничего не нашли, делаем еще один проход, но в обратном направлении
             answ = CheckCircleForPossibleConnectReverse(circle);
         }
         
@@ -82,24 +84,29 @@ public class CircleLogic
 
     private bool CheckForActiveNextCircle(SkillCircle circle)
     {
-        //true - Соседняя Активная кнопка с 1 путем до базы
-        //false - Соседняя кнопка или не активна или имеет другой путь до базы
+        //Итог:
+        //true - Соседняя Активная вершина с 1 путем до базы
+        //false - Соседняя вершина или не активна или имеет другой путь до базы
         bool answ = false;
         int k = 0;
         for(int i = connections.Count - 1; i >= 0; i--)
         {
+            //Нашли нашу вершину в списке ребер
             if (skillCircles[connections[i][0]] == circle)
             {
                 k++;
+                //Если вторая вершина в этом ребре активна, то
                 if (skillCircles[connections[i][1]].IsActive)
                 {
-                    if (HowMuchActiveRoute(skillCircles[connections[i][1]]) == 1)
+                    if (HowManyActiveRoutes(skillCircles[connections[i][1]]) == 1)
                     {
+                        //Если у соседней вершины один путь, значит он пролегает только через нашу вершину
                         return true;
                     }
 
                     else if (FindPreviousCircle(circle))
                     {
+                        //Если больше, значит ищем ребра в которых наша вершина вторая
                         return !CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], circle);
                     }
 
@@ -111,6 +118,7 @@ public class CircleLogic
             }
         }
 
+        //Если счетчик цикла остался ноль, и не сработало ни одного из условий, значит наша точка самая последняя и надо искать с самого низа где в ребре наша вершина вторая
         if (k==0)
         {
             for (int i = connections.Count - 1; i >= 0; i--)
@@ -126,7 +134,7 @@ public class CircleLogic
         return answ;
     }
 
-    private int HowMuchActiveRoute(SkillCircle circle)
+    private int HowManyActiveRoutes(SkillCircle circle)
     {
         int amount = 0;
         for (int i = 0; i < connections.Count; i++)
@@ -151,6 +159,7 @@ public class CircleLogic
         {
             if (skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]].IsActive)
             {
+                //Если наша вершина 2 в ребре, а первая вершина в этой паре активна, то проверяем первую вершину дальше на доступ к базе
                 answ = CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][0]], circle);               
                 break;
             }
@@ -171,6 +180,7 @@ public class CircleLogic
         bool answ = false;
         for (int i = connections.Count - 1; i >= 0; i--)
         {
+            //Если первая вершина в паре это база, значит мы дошли до базы с ограничениями, а значит Истина
             if (circle == skillCircles[0])
             {
                 return true;
@@ -178,14 +188,17 @@ public class CircleLogic
 
             if (skillCircles[connections[i][0]] == circle && skillCircles[connections[i][1]] != restriction && skillCircles[connections[i][1]].IsActive)
             {
+                //Если мы нашли соседню вершину, которая не является исключающей, и она активна, то проверяем ее дальше.
                 answ = answ || CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], restriction, circle);
-                if(HowMuchActiveRoute(circle) < 3)
+                if(HowManyActiveRoutes(circle) < 3)
                 {
+                    //Если у вершина 1 или 2 пути, то значит мы уже рассмотрели все пути и можно завершать. 
                     return answ;
                 }                
             }            
         }
 
+        //Если мы смогли дойти до сюда, значит мы не смогли найти соседние ребра где наша вершина стоит выше, следовательно делаем все то же самое, но "с низа". 
         answ = CheckActiveCircleFromDownToUp(circle, restriction, previousCircle);
         return answ;
     }

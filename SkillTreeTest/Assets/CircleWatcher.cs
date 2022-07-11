@@ -17,7 +17,10 @@ public class CircleWatcher
     
     public void CreateTree()
     {
+        //=========================================================
+        //Примеры графов, чтобы запустить другой граф надо раскоментировать между строк ==== другой граф =====, и закоментировать старый.
         //Простой пример графа
+        //============================================
         /*
         CreateCircle(0, 0, 0, "base", 0);
         CreateCircle(1, -161, 123, "run", 1);
@@ -29,11 +32,13 @@ public class CircleWatcher
         CreateConnections(0, 2);
         CreateConnections(2, 4);
         CreateConnections(0, 3);
-        CreateConnections(3, 4);*/
-
+        CreateConnections(3, 4);
+        */
+        //============================================
 
         //Пример графа как в задании
-        
+        //============================================
+
         CreateCircle(0, 0, 0, "base", 0);
         CreateCircle(1, -64, 79, "Ходьба", 1);
         CreateCircle(2, 58, -87, "Бег", 1);
@@ -59,7 +64,9 @@ public class CircleWatcher
         CreateConnections(8,10);
         CreateConnections(9,10);
 
+        //============================================
         //Пример кругового графа из конца задания
+        //============================================
         /*
         CreateCircle(0, 308, 0, "base", 0);
         CreateCircle(1, 237, 87, "Ходьба", 1);
@@ -77,7 +84,9 @@ public class CircleWatcher
         CreateConnections(3, 4);
         CreateConnections(4, 5);
         CreateConnections(5, 6);
-        CreateConnections(6, 7);*/
+        CreateConnections(6, 7);
+        */
+        //============================================
 
         Initial();
         circleLogic.EarnPoints(4);
@@ -111,24 +120,31 @@ public class CircleWatcher
         int id = (int)idCircle;
         ChosenIdButton = id;
         if (id > 0)
-        {            
+        {   
+            //Если вершина на которую нажали активна
             if (circleLogic.IsCircleActiveById(id))
             {
+                //Проверяем соседей на доступ к базе без нашей вершины
                 if (!circleLogic.CheckCircleByIdForActiveNextCircle(id))
                 {
+                    //Если у других вершин есть несколько путей до базы, то показываем кнопку Забыть
                     showerCircle.ShowButtonDeactivate();
                 }
                 else
                 {
+                    //Если у активных соседей нет других путей кроме нашей вершины, то ничего не показываем
                     showerCircle.ShowNoButton();
                 }
             }
+            //Если кнопка не активна, то проверяем на активных соседей, чтобы была возможность активировать вершину
             else if (circleLogic.CheckCircleByIdForPossibleConnect(id))
             {
+                //Если есть, то показываем кнопку Изучить
                 showerCircle.ShowButtonActivate();
             }
             else
             {
+                //Если нет, то ничего не показываем.
                 showerCircle.ShowNoButton();
             }
         }
