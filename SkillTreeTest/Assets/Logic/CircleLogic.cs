@@ -45,7 +45,8 @@ public class CircleLogic
                 }
                 else if (skillCircles[connections[i][0]].IsActive)
                 {
-                    answ = CheckCircleForPossibleConnect(skillCircles[connections[i][0]]);
+                    //answ = CheckCircleForPossibleConnect(skillCircles[connections[i][0]]);
+                    answ = true;
                 }
             }
             
@@ -71,7 +72,8 @@ public class CircleLogic
 
             else if (skillCircles[connections[i][0]] == circle && skillCircles[connections[i][1]].IsActive)
             {
-                answ = CheckCircleForPossibleConnectReverse(skillCircles[connections[i][1]]);
+                //answ = CheckCircleForPossibleConnectReverse(skillCircles[connections[i][1]]);
+                return true;
             }
         }
 
@@ -93,19 +95,16 @@ public class CircleLogic
                 {
                     if (HowMuchActiveRoute(skillCircles[connections[i][1]]) == 1)
                     {
-                        Debug.Log($"Ретурн тру");
                         return true;
                     }
 
                     else if (FindPreviousCircle(circle))
                     {
-                        Debug.Log($"Делаем проверку по активным кнопкам с исключением, чтобы шел в одну сторону");
                         return !CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], circle);
                     }
 
                     else
                     {
-                        Debug.Log($"Делаем елсе");
                         answ = !FindPreviousCircle(circle);
                     }
                 }
@@ -119,13 +118,11 @@ public class CircleLogic
                 if(skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]].IsActive)
                 {
                     answ = !CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][0]], circle);
-                    Debug.Log($"проникли в к, ответ стал {answ}");
                     break;
                 }
             }
         }
 
-        Debug.Log($"В итоге к = {k}, а ответ {answ}");
         return answ;
     }
 
@@ -154,19 +151,17 @@ public class CircleLogic
         {
             if (skillCircles[connections[i][1]] == circle && skillCircles[connections[i][0]].IsActive)
             {
-                Debug.Log($"Проверяем предыдущий кружочек в файнд {skillCircles[connections[i][0]].Id}");
-                answ = CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][0]], circle);
-                //answ = true;                
+                answ = CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][0]], circle);               
                 break;
             }
             else if(skillCircles[connections[i][1]] == circle && !skillCircles[connections[i][0]].IsActive)
             {
+                //Если предыдущая вершина отключена, это означает только одно - наша вершина последняя и ее можно деактивировать.
                 answ = true;
                 break;
             }
         }
 
-        Debug.Log($"Получили ответ по файнду {answ}");
         return answ;
     }
 
@@ -174,19 +169,16 @@ public class CircleLogic
     {
         //true - у кнопки есть прямой доступ к базе несмотря на ограниченные вершины
         bool answ = false;
-        Debug.Log($"Проверяем кружочек {circle.Id}");
         for (int i = connections.Count - 1; i >= 0; i--)
         {
             if (circle == skillCircles[0])
             {
-                Debug.Log($"Получили тру");
                 return true;
             }
 
             if (skillCircles[connections[i][0]] == circle && skillCircles[connections[i][1]] != restriction && skillCircles[connections[i][1]].IsActive)
             {
                 answ = answ || CheckForActivePreviousCircleWithRestriction(skillCircles[connections[i][1]], restriction, circle);
-                Debug.Log($"Получили {answ}");
                 if(HowMuchActiveRoute(circle) < 3)
                 {
                     return answ;
@@ -195,7 +187,6 @@ public class CircleLogic
         }
 
         answ = CheckActiveCircleFromDownToUp(circle, restriction, previousCircle);
-        Debug.Log($"Получили ответ {answ}");
         return answ;
     }
 

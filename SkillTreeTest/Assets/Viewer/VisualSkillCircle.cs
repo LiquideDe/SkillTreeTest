@@ -33,7 +33,6 @@ public class VisualSkillCircle : MonoBehaviour, IPointerDownHandler
     {
         backgroundActive.SetActive(false);
         backgroundDeactive.SetActive(true);
-        choiceImg.SetActive(false);
     }
 
     public void SetId(int id)
