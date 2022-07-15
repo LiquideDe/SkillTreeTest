@@ -5,19 +5,24 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public delegate void ClickOnCircle(int idCircle);
 public class VisualSkillCircle : MonoBehaviour, IPointerDownHandler
 {
     private int id;
     [SerializeField] private GameObject backgroundActive, backgroundDeactive, choiceImg;
     [SerializeField] private Text textDescription, textId;
-    [SerializeField] private CircleShower shower;
     
+    ClickOnCircle clickOnCircle;
 
+    public void RegistredDelegate(ClickOnCircle clickOnCircle)
+    {
+        this.clickOnCircle = clickOnCircle;
+    }
     public void OnPointerDown(PointerEventData eventData)
     {
         if(id != 0)
         {
-            shower.ClickOnCircle(id);
+            clickOnCircle?.Invoke(id);
             textDescription.gameObject.SetActive(true);
             choiceImg.SetActive(true);
         }        

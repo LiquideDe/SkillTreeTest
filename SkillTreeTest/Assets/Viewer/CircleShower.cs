@@ -25,6 +25,7 @@ public class CircleShower : MonoBehaviour
         var circle = circles[i].GetComponent<VisualSkillCircle>();
         circle.SetId(id);
         circle.SetDescription($"{description} - {cost} points");
+        circle.RegistredDelegate(ClickOnCircle);
         circles[i].SetParent(circlesContainer);
         circles[i].anchoredPosition = new Vector2(x, y);
         circles[i].gameObject.SetActive(true);
