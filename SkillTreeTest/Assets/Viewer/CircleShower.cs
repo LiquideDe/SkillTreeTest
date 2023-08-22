@@ -49,23 +49,13 @@ public class CircleShower : MonoBehaviour
         RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
         Vector2 dir = (secondPoint - firstPoint).normalized;
         float distance = Vector2.Distance(firstPoint, secondPoint);
-        //rectTransform.anchorMin = new Vector2(0, 0);
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
         rectTransform.sizeDelta = new Vector2(distance, 3f);
 
         rectTransform.anchoredPosition = firstPoint + dir * distance * .5f;
-        
-        Vector3 rot = Quaternion.LookRotation(secondPoint - firstPoint).normalized.eulerAngles;
 
-        
-        if(secondPoint.x < 0)
-        {
-            rectTransform.localEulerAngles = new Vector3(0, 0, rot.x);
-        }
-        else
-        {
-            rectTransform.localEulerAngles = new Vector3(0, 0, rot.x * -1);
-        }
+        float angle = Mathf.Atan2(dir.y, dir.x);
+        rectTransform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
 
         connections.Add(rectTransform);
     }
