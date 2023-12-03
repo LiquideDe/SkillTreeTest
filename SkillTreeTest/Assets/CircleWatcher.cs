@@ -38,7 +38,7 @@ public class CircleWatcher
 
         //Пример графа как в задании
         //============================================
-
+        /*
         CreateCircle(0, 0, 0, "base", 0);
         CreateCircle(1, -64, 79, "Ходьба", 1);
         CreateCircle(2, 58, -87, "Бег", 1);
@@ -63,11 +63,11 @@ public class CircleWatcher
         CreateConnections(6,7);
         CreateConnections(8,10);
         CreateConnections(9,10);
-
+        */
         //============================================
         //Пример кругового графа из конца задания
         //============================================
-        /*
+        
         CreateCircle(0, 308, 0, "base", 0);
         CreateCircle(1, 237, 87, "Ходьба", 1);
         CreateCircle(2, 125, 148, "Бег", 1);
@@ -85,7 +85,7 @@ public class CircleWatcher
         CreateConnections(4, 5);
         CreateConnections(5, 6);
         CreateConnections(6, 7);
-        */
+        
         //============================================
 
         Initial();
